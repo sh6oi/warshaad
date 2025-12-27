@@ -2,396 +2,240 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقديم فكرة لتطوير الجانب العملي</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>لوحة إدارة الورشة</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #7209b7;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4bb543;
-            --danger: #dc3545;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: 'Cairo', sans-serif;
+            background: #eef3ff;
             padding: 20px;
-            display: flex;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .table-container {
+            width: 95%;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        th {
+            background: #4a8df0;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f8ff;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            background: #ffb300;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #e53935;
+            color: white;
+        }
+
+        /* نافذة تعديل البيانات */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
             justify-content: center;
             align-items: center;
         }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .header {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            padding: 30px;
+
+        .modal-content {
+            background: white;
+            width: 380px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-            position: relative;
-        }
-        
-        .form-container {
-            padding: 40px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        label i {
-            color: var(--primary);
-        }
-        
-        input[type="text"], textarea {
+
+        .modal input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5ee;
+            padding: 12px;
+            border: 1px solid #aaa;
             border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: var(--transition);
-            background-color: var(--light);
+            margin-bottom: 12px;
         }
-        
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-        
-        textarea {
-            height: 180px;
-            resize: vertical;
-        }
-        
-        .char-count {
-            text-align: left;
-            font-size: 14px;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        
-        .submit-btn {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+
+        .save-btn {
+            background: #4a8df0;
             color: white;
-            border: none;
-            padding: 16px 40px;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            display: block;
-            margin: 30px auto 0;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
+            margin-top: 10px;
         }
-        
-        .submit-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: var(--transition);
+
+        .close-btn {
+            background: gray;
+            color: white;
+            margin-top: 10px;
         }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .submit-btn:hover::before {
-            left: 100%;
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-        
-        .submit-btn i {
-            margin-left: 8px;
-        }
-        
-        .message {
-            text-align: center;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            display: none;
-            animation: slideIn 0.3s ease-out;
-            position: relative;
-            padding-right: 50px;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .success {
-            background-color: #e8f5e9;
-            color: var(--success);
-            border: 1px solid #c8e6c9;
-        }
-        
-        .error {
-            background-color: #ffebee;
-            color: var(--danger);
-            border: 1px solid #ffcdd2;
-        }
-        
-        .message i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-        }
-        
-        .admin-link {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eaeaea;
-        }
-        
-        .admin-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-        
-        .admin-link a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #6c757d;
-            font-size: 14px;
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                border-radius: 12px;
-            }
-            
-            .header {
-                padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 24px;
-            }
-            
-            .form-container {
-                padding: 25px;
-            }
-            
-            .submit-btn {
-                width: 100%;
-            }
-        }
+
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-lightbulb"></i> أفكار لتطوير الجانب العملي</h1>
-            <p>شاركنا أفكارك الإبداعية لتطوير مادة الأجهزة</p>
-        </div>
-        
-        <div class="form-container">
-            <form id="ideaForm">
-                <div class="form-group">
-                    <label for="studentName"><i class="fas fa-user"></i> اسم الطالب:</label>
-                    <input type="text" id="studentName" placeholder="أدخل اسمك الكامل" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="idea"><i class="fas fa-edit"></i> فكرة التطوير:</label>
-                    <textarea id="idea" placeholder="اكتب فكرتك الإبداعية لتطوير الجانب العملي لمادة الأجهزة هنا..." required></textarea>
-                    <div class="char-count">عدد الأحرف: <span id="charCount">0</span></div>
-                </div>
-                
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane"></i> إرسال الفكرة
-                </button>
-            </form>
-            
-            <div id="message" class="message">
-                <i class="fas fa-check-circle"></i>
-                <span id="messageText"></span>
-            </div>
-            
-            <div class="admin-link">
-                <a href="admin.html">
-                    <i class="fas fa-user-shield"></i> 
-                </a>
-            </div>
-            
-            <div class="footer">
-                <p>جميع الحقوق محفوظة &copy; 2023</p>
-            </div>
+
+    <h1>لوحة إدارة الورشة</h1>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الاسم الثلاثي</th>
+                    <th>الجامعة</th>
+                    <th>الدراسة</th>
+                    <th>المحافظة</th>
+                    <th>التاريخ</th>
+                    <th>تعديل</th>
+                    <th>حذف</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+    </div>
+
+    <!-- نافذة تعديل البيانات -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>تعديل البيانات</h3>
+            <input id="editName" placeholder="الاسم الثلاثي">
+            <input id="editUniversity" placeholder="الجامعة">
+            <input id="editStudy" placeholder="الدراسة">
+            <input id="editProvince" placeholder="المحافظة">
+
+            <button class="btn save-btn" id="saveEdit">حفظ التعديل</button>
+            <button class="btn close-btn" onclick="closeModal()">إغلاق</button>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-        // Your web app's Firebase configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getDatabase, ref, onValue, remove, update } from 
+        "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
         const firebaseConfig = {
-            apiKey: "AIzaSyCAko7XItvf5nE6kF9AiFTyS9aag5HRzAY",
-            authDomain: "data11-11740.firebaseapp.com",
-            databaseURL: "https://data11-11740-default-rtdb.firebaseio.com",
-            projectId: "data11-11740",
-            storageBucket: "data11-11740.firebasestorage.app",
-            messagingSenderId: "317387675546",
-            appId: "1:317387675546:web:ee41dae1ab9c8fe76dcc23",
-            measurementId: "G-NN9QMS0TYG"
+            apiKey: "AIzaSyAyhdcSGehtUTIdTsGUYyvfmd5ZRsJ2-yU",
+            authDomain: "test-260fd.firebaseapp.com",
+            databaseURL: "https://test-260fd-default-rtdb.firebaseio.com",
+            projectId: "test-260fd",
+            storageBucket: "test-260fd.firebasestorage.app",
+            messagingSenderId: "579276259257",
+            appId: "1:579276259257:web:7feec15d8a4c077031c068",
+            measurementId: "G-4W8MZP9S82"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        const db = getDatabase(app);
 
-        // Handle character count for textarea
-        const ideaTextarea = document.getElementById('idea');
-        const charCount = document.getElementById('charCount');
-        
-        ideaTextarea.addEventListener('input', function() {
-            charCount.textContent = this.value.length;
+        const table = document.getElementById("usersTable");
+        const editModal = document.getElementById("editModal");
+
+        let editUserId = null;
+
+        // عرض المستخدمين
+        const usersRef = ref(db, "Workshop_Registration/");
+        onValue(usersRef, (snapshot) => {
+            table.innerHTML = "";
+
+            snapshot.forEach(child => {
+                const user = child.val();
+                const id = child.key;
+
+                const row = `
+                    <tr>
+                        <td>${user.fullName}</td>
+                        <td>${user.university}</td>
+                        <td>${user.study}</td>
+                        <td>${user.province}</td>
+                        <td>${user.timestamp.split("T")[0]}</td>
+                        <td><button class="btn edit-btn" onclick="editUser('${id}', '${user.fullName}', '${user.university}', '${user.study}', '${user.province}')">تعديل</button></td>
+                        <td><button class="btn delete-btn" onclick="deleteUser('${id}')">حذف</button></td>
+                    </tr>
+                `;
+
+                table.innerHTML += row;
+            });
         });
 
-        // Handle form submission
-        document.getElementById('ideaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const studentName = document.getElementById('studentName').value;
-            const idea = document.getElementById('idea').value;
-            const messageDiv = document.getElementById('message');
-            const messageText = document.getElementById('messageText');
-            
-            if (studentName && idea) {
-                // Create a new idea entry
-                const ideasRef = ref(database, 'ideas');
-                const newIdeaRef = push(ideasRef);
-                
-                set(newIdeaRef, {
-                    studentName: studentName,
-                    idea: idea,
-                    timestamp: new Date().toISOString()
-                }).then(() => {
-                    // Show success message
-                    messageText.textContent = 'تم إرسال فكرتك بنجاح! شكراً لمشاركتك.';
-                    messageDiv.className = 'message success';
-                    messageDiv.style.display = 'block';
-                    
-                    // Reset form
-                    document.getElementById('ideaForm').reset();
-                    charCount.textContent = '0';
-                    
-                    // Hide message after 5 seconds
-                    setTimeout(() => {
-                        messageDiv.style.display = 'none';
-                    }, 5000);
-                }).catch((error) => {
-                    // Show error message
-                    messageText.textContent = 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.';
-                    messageDiv.className = 'message error';
-                    messageDiv.style.display = 'block';
-                    console.error('Error saving idea:', error);
-                    
-                    // Hide message after 5 seconds
-                    setTimeout(() => {
-                        messageDiv.style.display = 'none';
-                    }, 5000);
-                });
+        // حذف مستخدم
+        window.deleteUser = function(id) {
+            if (confirm("هل أنت متأكد من حذف هذا الشخص؟")) {
+                remove(ref(db, "Workshop_Registration/" + id));
             }
+        }
+
+        // فتح نافذة التعديل
+        window.editUser = function(id, name, university, study, province) {
+            editUserId = id;
+
+            document.getElementById("editName").value = name;
+            document.getElementById("editUniversity").value = university;
+            document.getElementById("editStudy").value = study;
+            document.getElementById("editProvince").value = province;
+
+            editModal.style.display = "flex";
+        }
+
+        // حفظ التعديلات
+        document.getElementById("saveEdit").addEventListener("click", () => {
+            const newData = {
+                fullName: document.getElementById("editName").value,
+                university: document.getElementById("editUniversity").value,
+                study: document.getElementById("editStudy").value,
+                province: document.getElementById("editProvince").value
+            };
+
+            update(ref(db, "Workshop_Registration/" + editUserId), newData);
+
+            editModal.style.display = "none";
         });
+
+        function closeModal() {
+            editModal.style.display = "none";
+        }
+
     </script>
+
 </body>
 </html>
-
